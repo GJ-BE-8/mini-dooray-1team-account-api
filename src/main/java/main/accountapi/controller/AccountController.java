@@ -30,14 +30,15 @@ public class AccountController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<AccountResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
             // 로그인 요청을 처리하고 성공적인 응답을 반환
             AccountResponse response = accountService.login(request);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             // 로그인 실패시 예외 처리 (잘못된 아이디 또는 비밀번호)
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("잘못된 아이디 또는 비밀번호");
         }
     }
 

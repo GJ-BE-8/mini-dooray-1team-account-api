@@ -1,0 +1,42 @@
+### 회원가입 (POST /accounts/register)
+POST http://localhost:8080/accounts/register
+Content-Type: application/json
+
+{
+  "ids": "testuser",
+  "password": "password123",
+  "name": "이름",
+  "email": "test@example.com"
+}
+
+### 로그인 (POST /accounts/login)
+POST http://localhost:8080/accounts/login
+Content-Type: application/json
+
+{
+  "ids": "testuser",
+  "password": "password123"
+}
+
+### 모든 계정 조회 (GET /accounts/all)
+GET http://localhost:8080/accounts/all
+
+### 아이디로 계정 조회 (GET /accounts/{ids})
+GET http://localhost:8080/accounts/testuser
+
+### 회원 정보 수정 (PUT /accounts/{id})
+PUT http://localhost:8080/accounts/1
+Content-Type: application/json
+
+{
+  "ids": "testuser2",
+  "password": "newpassword123",
+  "name": "삼",
+  "email": "newemail@example.com"
+}
+
+### 회원 상태 변경 (PUT /accounts/{id}/status)
+PUT http://localhost:8080/accounts/1/status?status=INACTIVE
+
+### 회원 삭제 (DELETE /accounts/{id})
+DELETE http://localhost:8080/accounts/1

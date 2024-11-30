@@ -36,13 +36,14 @@ public class AccountServiceImpl implements AccountService {
         Account account = new Account();
         account.setIds(request.ids());
         account.setPassword(encodePassword); // 암호화된 비밀번호
+        account.setName(request.name());
         account.setEmail(request.email());
         account.setStatus(UserStatus.ACTIVE); // 기본값은 화성으로
 
         Account savedAccount = accountRepository.save(account);
 
         // 응답 디티오로 바꿈
-        return new AccountResponse(savedAccount.getId(), savedAccount.getIds(), account.getEmail(), account.getStatus());
+        return new AccountResponse(savedAccount.getId(), savedAccount.getIds(), account.getName(), account.getEmail(), account.getStatus());
     }
 
     // 로그인
@@ -59,7 +60,7 @@ public class AccountServiceImpl implements AccountService {
         }
 
         // 로그인 성공시 AccountResponse 반환
-        return new AccountResponse(account.getId(), account.getIds(), account.getEmail(), account.getStatus());
+        return new AccountResponse(account.getId(), account.getIds(), account.getName(), account.getEmail(), account.getStatus());
     }
 
     //모든 멤버들 불러오기
@@ -67,7 +68,7 @@ public class AccountServiceImpl implements AccountService {
         List<Account> accounts = accountRepository.findAll();
 
         return accounts.stream()
-                .map(account -> new AccountResponse(account.getId(),account.getIds(), account.getEmail(), account.getStatus()))
+                .map(account -> new AccountResponse(account.getId(),account.getIds(), account.getName(), account.getEmail(), account.getStatus()))
                 .collect(Collectors.toList());
     }
 
@@ -77,7 +78,7 @@ public class AccountServiceImpl implements AccountService {
         if(accountRepository.existsAccountByIds(ids)){
             throw new IllegalArgumentException("찾을 수 없는 아이디입니다.");
         }
-        return new AccountResponse(account.getId(), account.getIds(), account.getEmail(), account.getStatus());
+        return new AccountResponse(account.getId(), account.getIds(), account.getName(), account.getEmail(), account.getStatus());
     }
 
     // 회원정보 수정
@@ -94,7 +95,7 @@ public class AccountServiceImpl implements AccountService {
         }
 
         accountRepository.save(existingAccount);
-        return new AccountResponse(existingAccount.getId(), existingAccount.getIds(), existingAccount.getEmail(), existingAccount.getStatus());
+        return new AccountResponse(existingAccount.getId(), existingAccount.getIds(), existingAccount.getName(), existingAccount.getEmail(), existingAccount.getStatus());
     }
 
     // 회원상태 변경
@@ -103,7 +104,7 @@ public class AccountServiceImpl implements AccountService {
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
         account.setStatus(status);
         accountRepository.save(account);
-        return new AccountResponse(account.getId(), account.getIds(), account.getEmail(), account.getStatus());
+        return new AccountResponse(account.getId(), account.getIds(), account.getName(), account.getEmail(), account.getStatus());
     }
 
     // 회원 삭제

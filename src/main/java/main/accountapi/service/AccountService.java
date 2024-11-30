@@ -1,28 +1,32 @@
 package main.accountapi.service;
-
+import main.accountapi.model.dto.AccountResponse;
+import main.accountapi.model.dto.LoginRequest;
 import main.accountapi.model.dto.RegisterRequest;
 import main.accountapi.model.entity.Account;
-import main.accountapi.repository.AccountRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import main.accountapi.model.UserStatus;
 
-@Service
-public class AccountService {
+import java.util.List;
 
-    private final AccountRepository accountRepository;
-    private final PasswordEncoder passwordEncoder;
-
-    public AccountService(AccountRepository accountRepository, PasswordEncoder passwordEncoder){
-        this.accountRepository = accountRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+public interface AccountService {
 
     // 회원가입
-    public RegisterRequest register(RegisterRequest request){
-        if(accountRepository.existsAccountByIds(request.ids())){
-            throw new IllegalArgumentException("이미있는 아이디입니다.");
-        }
+    AccountResponse register(RegisterRequest request);
 
-        return null;
-    }
+    // 로그인
+    AccountResponse login(LoginRequest request);
+
+    // 모든 멤버들 불러오기
+    List<AccountResponse> getAllAccounts();
+
+    // 아이디로 유저정보 조회
+    AccountResponse getAccountByIds(String ids);
+
+    // 회원정보 수정
+    AccountResponse updateAccount(long id, RegisterRequest request);
+
+    // 회원상태 변경
+    AccountResponse updateStatus(long id, UserStatus status);
+
+    // 회원 삭제
+    void deleteAccount(long id);
 }

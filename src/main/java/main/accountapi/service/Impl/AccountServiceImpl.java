@@ -25,6 +25,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     // 회원가입
+    @Override
     public AccountResponse register(RegisterRequest request){
         if(accountRepository.existsAccountByIds(request.ids())){
             throw new IllegalArgumentException("존재하는 아이디입니다.");
@@ -48,6 +49,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     // 로그인
+    @Override
     public AccountResponse login(LoginRequest request) {
         // 아이디로 유저를 찾기
         Account account = accountRepository.findAccountByIds(request.ids());
@@ -65,6 +67,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     //모든 멤버들 불러오기
+    @Override
     public List<AccountResponse> getAllAccounts(){
         List<Account> accounts = accountRepository.findAll();
 
@@ -74,17 +77,18 @@ public class AccountServiceImpl implements AccountService {
     }
 
     // 아이디로 유저정보 조회
+    @Override
     public AccountResponse getAccountByIds(String ids){
-        if(accountRepository.existsAccountByIds(ids)){
+        Account account = accountRepository.findAccountByIds(ids);
+        if(account == null){
             throw new IllegalArgumentException("찾을 수 없는 아이디입니다.");
         }
-
-        Account account = accountRepository.findAccountByIds(ids);
 
         return new AccountResponse(account.getId(), account.getIds(), account.getName(), account.getEmail(), account.getStatus());
     }
 
     // 회원정보 수정
+    @Override
     public AccountResponse updateAccount(long id, RegisterRequest request){
         Account existingAccount = accountRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
@@ -104,6 +108,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     // 회원상태 변경
+    @Override
     public AccountResponse updateStatus(long id, UserStatus status) {
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
@@ -113,6 +118,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     // 회원 삭제
+    @Override
     public void deleteAccount(long id) {
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));

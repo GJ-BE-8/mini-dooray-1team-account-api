@@ -2,7 +2,6 @@ package main.accountapi.service;
 import main.accountapi.model.dto.AccountResponse;
 import main.accountapi.model.dto.LoginRequest;
 import main.accountapi.model.dto.RegisterRequest;
-import main.accountapi.model.entity.Account;
 import main.accountapi.model.UserStatus;
 
 import java.util.List;

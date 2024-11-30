@@ -1,4 +1,4 @@
-package main.accountapi.service;
+package main.accountapi.service.Impl;
 
 import main.accountapi.model.UserStatus;
 import main.accountapi.model.dto.AccountResponse;
@@ -6,6 +6,7 @@ import main.accountapi.model.dto.LoginRequest;
 import main.accountapi.model.dto.RegisterRequest;
 import main.accountapi.model.entity.Account;
 import main.accountapi.repository.AccountRepository;
+import main.accountapi.service.AccountService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -74,10 +75,12 @@ public class AccountServiceImpl implements AccountService {
 
     // 아이디로 유저정보 조회
     public AccountResponse getAccountByIds(String ids){
-        Account account = accountRepository.findAccountByIds(ids);
         if(accountRepository.existsAccountByIds(ids)){
             throw new IllegalArgumentException("찾을 수 없는 아이디입니다.");
         }
+
+        Account account = accountRepository.findAccountByIds(ids);
+
         return new AccountResponse(account.getId(), account.getIds(), account.getName(), account.getEmail(), account.getStatus());
     }
 
@@ -86,7 +89,9 @@ public class AccountServiceImpl implements AccountService {
         Account existingAccount = accountRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
 
-        // 필드 수정
+        existingAccount.setIds(request.ids());
+        existingAccount.setPassword(request.password());
+        existingAccount.setName(request.name());
         existingAccount.setEmail(request.email());
 
         // 비밀번호 변경 시 암호화

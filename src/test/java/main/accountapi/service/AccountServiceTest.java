@@ -6,6 +6,7 @@ import main.accountapi.model.dto.LoginRequest;
 import main.accountapi.model.dto.RegisterRequest;
 import main.accountapi.model.entity.Account;
 import main.accountapi.repository.AccountRepository;
+import main.accountapi.service.Impl.AccountServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -42,7 +43,7 @@ public class AccountServiceTest {
         account.setEmail("test@example.com");
         account.setStatus(UserStatus.ACTIVE);
 
-        registerRequest = new RegisterRequest("testuser", "password123", "test@example.com");
+        registerRequest = new RegisterRequest("testuser", "password123", "1팀", "test@example.com");
         loginRequest = new LoginRequest("testuser", "password123");
     }
 
@@ -90,11 +91,13 @@ public class AccountServiceTest {
         when(accountRepository.findById(account.getId())).thenReturn(java.util.Optional.of(account));
         when(accountRepository.save(any(Account.class))).thenReturn(account);
 
-        RegisterRequest updatedRequest = new RegisterRequest("testuser", "newPassword", "newEmail@example.com");
+        RegisterRequest updatedRequest = new RegisterRequest("testuser1", "newPassword", "삼사오", "newEmail@example.com");
 
         AccountResponse response = accountService.updateAccount(account.getId(), updatedRequest);
 
+        assertEquals("testuser1", response.ids());
         assertEquals("newEmail@example.com", response.email());
+        assertEquals("삼사오", response.name());
     }
 
     @Test

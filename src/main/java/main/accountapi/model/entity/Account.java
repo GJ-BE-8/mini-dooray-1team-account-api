@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import main.accountapi.model.UserStatus;
-import org.antlr.v4.runtime.misc.NotNull;
+
 
 @Entity
 @Table(name = "users")
@@ -21,15 +21,12 @@ public class Account {
     private long id;
 
     //유저 아이디
-    @NotNull
     private String ids;
 
-    @NotNull
     private String password;
 
     private String name;
 
-    @NotNull
     private String email;
 
     @Enumerated(EnumType.STRING)

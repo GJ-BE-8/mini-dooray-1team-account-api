@@ -3,6 +3,7 @@ package main.accountapi.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import main.accountapi.model.UserStatus;
 import main.accountapi.model.dto.AccountResponse;
+import main.accountapi.model.dto.AuthenticationResponse;
 import main.accountapi.model.dto.LoginRequest;
 import main.accountapi.model.dto.RegisterRequest;
 import main.accountapi.service.AccountService;
@@ -13,6 +14,7 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -99,24 +101,60 @@ public class AccountControllerTest {
                 .andExpect(jsonPath("$[0].email").value("test@example.com"));
     }
 
-    // 아이디로 계정 조회 테스트
-    @Test
-    public void getAccountByIds_ShouldReturnAccount() throws Exception {
-        when(accountService.getAccountByIds("testuser")).thenReturn(accountResponse);
+//    // 아이디로 계정 조회 테스트
+//    @Test
+//    public void getAccountByIds_ShouldReturnAccount() throws Exception {
+//        when(accountService.getAccountByIds("testuser")).thenReturn(accountResponse);
+//
+//        mockMvc.perform(get("/accounts/testuser"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.ids").value("testuser"))
+//                .andExpect(jsonPath("$.email").value("test@example.com"));
+//    }
 
-        mockMvc.perform(get("/accounts/testuser"))
+    @Test
+    public void getAccountByIds_success() throws Exception {
+        // Mock 데이터
+        String ids = "test123";
+        AuthenticationResponse response = new AuthenticationResponse(ids, "password123", "Test User", "test@example.com");
+
+        // Service 레이어 모킹
+        when(accountService.authenticateLogin(ids)).thenReturn(response);
+
+        // 테스트 요청 및 검증
+        mockMvc.perform(get("/accounts/{ids}", ids)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.ids").value("testuser"))
+                .andExpect(jsonPath("$.ids").value(ids))
+                .andExpect(jsonPath("$.password").value("password123"))
+                .andExpect(jsonPath("$.name").value("Test User"))
                 .andExpect(jsonPath("$.email").value("test@example.com"));
     }
 
-    @Test
-    public void getAccountByIds_ShouldReturnNotFound() throws Exception {
-        when(accountService.getAccountByIds("nonexistent")).thenThrow(new IllegalArgumentException("유저를 찾을 수 없습니다."));
 
-        mockMvc.perform(get("/accounts/nonexistent"))
-                .andExpect(status().isNotFound());
+//    @Test
+//    public void getAccountByIds_ShouldReturnNotFound() throws Exception {
+//        when(accountService.getAccountByIds("nonexistent")).thenThrow(new IllegalArgumentException("유저를 찾을 수 없습니다."));
+//
+//        mockMvc.perform(get("/accounts/nonexistent"))
+//                .andExpect(status().isNotFound());
+//    }
+
+    @Test
+    public void getAccountByIds_notFound() throws Exception {
+        // Mock 데이터
+        String ids = "nonexistent";
+
+        // Service 레이어 모킹: 예외 발생
+        when(accountService.authenticateLogin(ids)).thenThrow(new IllegalArgumentException("Account not found"));
+
+        // 테스트 요청 및 검증
+        mockMvc.perform(get("/accounts/{ids}", ids)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$").doesNotExist());
     }
+
 
     // 회원 정보 수정 테스트
     @Test

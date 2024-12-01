@@ -2,6 +2,7 @@ package main.accountapi.service;
 
 import main.accountapi.model.UserStatus;
 import main.accountapi.model.dto.AccountResponse;
+import main.accountapi.model.dto.AuthenticationResponse;
 import main.accountapi.model.dto.LoginRequest;
 import main.accountapi.model.dto.RegisterRequest;
 import main.accountapi.model.entity.Account;
@@ -248,4 +249,17 @@ public class AccountServiceTest {
 
         assertEquals("유저를 찾을 수 없습니다.", exception.getMessage());
     }
+
+    @Test
+    public void authenticateLoginTest(){
+        when(accountRepository.findAccountByIds(account.getIds())).thenReturn(account);
+
+        AuthenticationResponse authenticationResponse = accountService.authenticateLogin(account.getIds());
+
+        assertEquals(authenticationResponse.ids(), account.getIds());
+        assertEquals(authenticationResponse.name(), account.getName());
+        assertEquals(authenticationResponse.password(), account.getPassword());
+        assertEquals(authenticationResponse.email(), account.getEmail());
+    }
+
 }

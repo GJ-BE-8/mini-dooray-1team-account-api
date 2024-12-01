@@ -1,10 +1,10 @@
 ### 회원가입 (POST /accounts/register)
-POST http://localhost:8080/accounts/register
+POST http://localhost:8081/accounts/register
 Content-Type: application/json
 
 {
-  "ids": "testuser",
-  "password": "password123",
+  "ids": "aa",
+  "password": "aa",
   "name": "이름",
   "email": "test@example.com"
 }
@@ -29,10 +29,10 @@ Content-Type: application/json
 }
 
 ### 모든 계정 조회 (GET /accounts/all)
-GET http://localhost:8080/accounts/all
+GET http://localhost:8081/accounts/all
 
 ### 아이디로 계정 조회 (GET /accounts/{ids})
-GET http://localhost:8080/accounts/testuser
+GET http://localhost:8081/accounts/aa
 
 ### 회원 정보 수정 (PUT /accounts/{id})
 PUT http://localhost:8080/accounts/1

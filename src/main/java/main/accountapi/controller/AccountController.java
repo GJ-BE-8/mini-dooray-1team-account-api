@@ -2,6 +2,7 @@ package main.accountapi.controller;
 
 import main.accountapi.model.UserStatus;
 import main.accountapi.model.dto.AccountResponse;
+import main.accountapi.model.dto.AuthenticationResponse;
 import main.accountapi.model.dto.LoginRequest;
 import main.accountapi.model.dto.RegisterRequest;
 import main.accountapi.service.AccountService;
@@ -50,11 +51,22 @@ public class AccountController {
     }
 
     // 아이디로 계정 조회
+//    @GetMapping("/{ids}")
+//    public ResponseEntity<AccountResponse> getAccountByIds(@PathVariable String ids) {
+//        try {
+//            AccountResponse account = accountService.getAccountByIds(ids);
+//            return new ResponseEntity<>(account, HttpStatus.OK);
+//        } catch (IllegalArgumentException e) {
+//            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+//        }
+//    }
+
+    // 아이디로 계정 조회
     @GetMapping("/{ids}")
-    public ResponseEntity<AccountResponse> getAccountByIds(@PathVariable String ids) {
+    public ResponseEntity<AuthenticationResponse> getAccountByIds(@PathVariable String ids) {
         try {
-            AccountResponse account = accountService.getAccountByIds(ids);
-            return new ResponseEntity<>(account, HttpStatus.OK);
+            AuthenticationResponse response = accountService.authenticateLogin(ids);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
@@ -93,4 +105,5 @@ public class AccountController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
 }

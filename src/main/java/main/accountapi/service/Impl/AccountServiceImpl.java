@@ -2,6 +2,7 @@ package main.accountapi.service.Impl;
 
 import main.accountapi.model.UserStatus;
 import main.accountapi.model.dto.AccountResponse;
+import main.accountapi.model.dto.AuthenticationResponse;
 import main.accountapi.model.dto.LoginRequest;
 import main.accountapi.model.dto.RegisterRequest;
 import main.accountapi.model.entity.Account;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -123,6 +125,14 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
         accountRepository.delete(account);
+    }
+
+    @Override
+    public AuthenticationResponse authenticateLogin(String ids) {
+
+        Account account = accountRepository.findAccountByIds(ids);
+        return new AuthenticationResponse(account.getIds(), account.getPassword(), account.getName(), account.getEmail());
+
     }
 
 }

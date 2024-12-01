@@ -1,5 +1,6 @@
 package main.accountapi.service;
 import main.accountapi.model.dto.AccountResponse;
+import main.accountapi.model.dto.AuthenticationResponse;
 import main.accountapi.model.dto.LoginRequest;
 import main.accountapi.model.dto.RegisterRequest;
 import main.accountapi.model.UserStatus;
@@ -28,4 +29,6 @@ public interface AccountService {
 
     // 회원 삭제
     void deleteAccount(long id);
+
+    AuthenticationResponse authenticateLogin(String ids);
 }

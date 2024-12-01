@@ -131,7 +131,7 @@ public class AccountServiceImpl implements AccountService {
     public AuthenticationResponse authenticateLogin(String ids) {
 
         Account account = accountRepository.findAccountByIds(ids);
-        return new AuthenticationResponse(account.getIds(), account.getPassword());
+        return new AuthenticationResponse(account.getIds(), account.getPassword(), account.getName(), account.getEmail());
 
     }
 
